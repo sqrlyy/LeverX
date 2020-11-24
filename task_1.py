@@ -1,7 +1,5 @@
-import json
 import argparse
-import dicttoxml
-from xml.dom import minidom
+from modules import JsonLoader, JsonSaver, XMLSaver
 
 
 def arrange_data(rooms, students):
@@ -10,7 +8,7 @@ def arrange_data(rooms, students):
         for student in students:
             if room['id'] == student['room']:
                 room['students'].append({'name': student['name'], 'id': student['id']})
-    return  rooms
+    return rooms
 
 
 def create_parser():
@@ -22,19 +20,17 @@ def create_parser():
 
 
 def main(rooms_path, students_path, format):
-    with open(rooms_path) as room_json, open(students_path) as students_json:
-        rooms = json.load(room_json)
-        students = json.load(students_json)
+    rooms = JsonLoader(rooms_path).load()
+    students = JsonLoader(students_path).load()
 
     result = arrange_data(rooms, students)
+
     if format == 'json':
-        with open('result.json', 'w') as f:
-            json.dump(result, f, indent=2)
+        JsonSaver(result).save()
+    elif format == 'xml':
+        XMLSaver(result).save()
     else:
-        xml = dicttoxml.dicttoxml(result, custom_root='rooms')
-        new_xml = minidom.parseString(xml).toprettyxml()
-        with open('result.xml', 'w') as f:
-            f.write(new_xml)
+        print('Choose xml or json as output format.')
 
 
 if __name__ == '__main__':
