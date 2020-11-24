@@ -1,5 +1,6 @@
 import json
 import dicttoxml
+import xml.dom
 from xml.dom import minidom
 
 
@@ -12,9 +13,6 @@ class Loader():
 
 
 class JsonLoader(Loader):
-    def __init__(self, path):
-        super().__init__(path)
-
     def load(self):
         try:
             with open(self.path) as loadfile:
@@ -33,18 +31,12 @@ class Saver():
 
 
 class JsonSaver(Saver):
-    def __init__(self, result):
-        super().__init__(result)
-
     def save(self):
         with open('result.json', 'w') as f:
             json.dump(self.result, f, indent=2)
 
 
 class XMLSaver(Saver):
-    def __init__(self, result):
-        super().__init__(result)
-
     def save(self):
         xml = dicttoxml.dicttoxml(self.result, custom_root='rooms')
         new_xml = minidom.parseString(xml).toprettyxml()

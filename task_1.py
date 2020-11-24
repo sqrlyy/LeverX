@@ -5,9 +5,8 @@ from modules import JsonLoader, JsonSaver, XMLSaver
 def arrange_data(rooms, students):
     for room in rooms:
         room['students'] = []
-        for student in students:
-            if room['id'] == student['room']:
-                room['students'].append({'name': student['name'], 'id': student['id']})
+    for student in students:
+        rooms[student['room']]['students'].append({'name': student['name'], 'id': student['id']})
     return rooms
 
 
